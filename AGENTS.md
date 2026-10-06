@@ -77,7 +77,7 @@ Status: playable web build with all mechanics, modes and progression; tested. Na
 - Generated boards (daily, weekly, endless) are stored in the save as full `Puzzle` objects, so a half-played board survives a reload even if the generator changes.
 - `window.__waterSort` is a small handle used by the end-to-end test (`hints(n)` lifts the hint ration for the test). Keep its methods when refactoring `main.ts`.
 - Board animations must survive a board swap mid-flight: `tickTweens` drops a tween whose target was destroyed, and `Board.pour/seal/unlock` check `destroyed` after every await.
-- In-game text, code and comments are in English.
+- Everything written down is in English: in-game text, code, comments, commit messages and all documentation (README, this file, anything under `docs/`). No exceptions.
 
 ## Before calling a change done
 
@@ -111,6 +111,6 @@ It is slow under software rendering (several minutes).
 
 ## Working with the owner
 
-- Reply in Russian and keep it short.
+- Reply in Russian in chat and keep it short. Files are still written in English (see above).
 - Commit only when asked.
 - Say plainly what was verified and what was not.

@@ -1,75 +1,79 @@
 # Water Sort Puzzle
 
-TypeScript + PixiJS 8, упаковка в сторы через Capacitor. 100 уровней в 10 главах, у каждого проверенное решение,
-плюс ежедневная доска, недельное испытание и бесконечный режим.
+TypeScript + PixiJS 8, packaged for the stores with Capacitor. 100 levels in 10 chapters, each with a
+verified solution, plus a daily board, a weekly challenge and an endless mode. The web build is an
+installable PWA that works offline.
 
-## Команды
+Play: https://igoreli.github.io/water-sort/
 
-| Команда | Что делает |
+## Commands
+
+| Command | What it does |
 | --- | --- |
-| `npm install` | ставит зависимости |
-| `npm run dev` | локальный сервер разработки (Vite) |
-| `npm run build` | проверка типов и веб-сборка в `dist/` |
-| `npm test` | тесты правил, режимов и достижений + решение и проигрывание всех 100 уровней |
-| `npm run levels` | заново генерирует `src/core/levels.json` (около минуты) |
-| `npm run build:single` | игра одним HTML-файлом в `dist-single/` (PixiJS с CDN) |
-| `npm run test:e2e` | проходит уровни и режимы в настоящем браузере кликами (нужен Chromium и сервер на `dist-single`, порт 4173) |
+| `npm install` | install dependencies |
+| `npm run dev` | local dev server (Vite) |
+| `npm run build` | type-check, web build into `dist/`, then the service worker is written |
+| `npm test` | rule, mode and achievement tests, then solves and replays all 100 levels |
+| `npm run levels` | regenerate `src/core/levels.json` (about a minute) |
+| `npm run build:single` | the whole game as one HTML file in `dist-single/` (PixiJS from a CDN) |
+| `npm run test:e2e` | plays levels and modes in a real browser by clicking (needs Chromium and a server on `dist-single`, port 4173) |
 
-## Структура
+## Layout
 
-- `src/core/game.ts` — правила: переливание, победа, тупик. Принимает объект `Rules` (вместимость, этикетки, замки, «вся полоса»). Без графики.
-- `src/core/chapters.ts` — главы: механика, цвета, цвет темы, форма сосуда, жидкость, подсказка-обучение.
-- `src/core/solver.ts` — решатель (взвешенный A*): проверка уровней и подсказки.
-- `src/core/generator.ts` — генерация досок с модификаторами и оценка сложности.
-- `src/core/modes.ts` — ежедневная, недельная и бесконечная доски (сид из календаря, сервер не нужен).
-- `src/core/achievements.ts` — достижения и звёзды.
-- `src/core/levels.json` — готовые уровни (генерируется, руками не править).
-- `src/view/` — PixiJS: бутылки четырёх форм, жидкость, туман, джокер, этикетки, замки, анимация переливания, эффекты.
-- `src/main.ts` — игровой контроллер, режимы, меню; `src/audio.ts` — звук (свой голос у каждой жидкости); `src/storage.ts` — сохранение.
+- `src/core/game.ts` — rules: pour, win, stuck. Takes a `Rules` object (capacity, labels, locks, whole-run pours). No graphics.
+- `src/core/chapters.ts` — chapters: twist, colour range, theme colours, vessel shape, liquid, tutorial tip.
+- `src/core/solver.ts` — weighted A*: verifies levels and powers hints.
+- `src/core/generator.ts` — board generation with modifiers and the difficulty rating.
+- `src/core/modes.ts` — daily, weekly and endless boards (seeded from the calendar, no server needed).
+- `src/core/achievements.ts` — achievements and stars.
+- `src/core/levels.json` — generated levels (never edit by hand).
+- `src/view/` — PixiJS: four vessel shapes, liquid, fog, wild layers, labels, padlocks, the pour animation, effects.
+- `src/main.ts` — game controller, modes and menu; `src/audio.ts` — sound (each liquid has its own voice); `src/storage.ts` — saving.
 
-## Главы и механики
+## Chapters and twists
 
-| Глава | Уровни | Механика |
+| Chapter | Levels | Twist |
 | --- | --- | --- |
-| 1 Spring Water | 1–10 | классика |
-| 2 Misty Lake | 11–20 | туман: виден только верхний слой |
-| 3 Tall Tubes | 21–30 | пробирки на 5 слоёв |
-| 4 The Lab | 31–40 | этикетка: бутылка принимает один цвет |
-| 5 The Vault | 41–50 | замок: бутылка открывается, когда собран цвет на замке |
-| 6 Rainbow Potion | 51–60 | джокер: бледный слой подходит к любому цвету |
-| 7 Honey Pots | 61–70 | густая жидкость: льётся вся полоса или ничего |
-| 8 Odd Jars | 71–80 | банки разного объёма |
-| 9 Lava Rush | 81–90 | лимит переливаний: par + 3 |
-| 10 Grand Mix | 91–100 | две случайные механики на уровень |
+| 1 Spring Water | 1–10 | the classic rules |
+| 2 Misty Lake | 11–20 | fog: only the top layer is visible |
+| 3 Tall Tubes | 21–30 | tubes hold five layers |
+| 4 The Lab | 31–40 | label: a bottle accepts one colour only |
+| 5 The Vault | 41–50 | lock: a bottle opens once the colour on its padlock is finished |
+| 6 Rainbow Potion | 51–60 | wild: the pale layer joins any colour |
+| 7 Honey Pots | 61–70 | thick liquid: the whole run pours or nothing does |
+| 8 Odd Jars | 71–80 | jars of different sizes |
+| 9 Lava Rush | 81–90 | pour limit: par + 3 |
+| 10 Grand Mix | 91–100 | two random twists per level |
 
-Каждый пятый уровень начиная с 15-го — «Hard»: одна запасная бутылка (в главе с замками — на цвет больше).
+Every fifth level from 15 is "Hard": one spare bottle (the locks chapter keeps two and adds a colour).
 
-## Сложность
+## Difficulty
 
-Оценка уровня = длина решения × (1 + 2 × доля партий, где игрок «без планирования» заходит в тупик).
-Внутри каждой группы уровни идут по возрастанию оценки.
+Level rating = solution length × (1 + 2 × share of no-lookahead playouts that get stuck).
+Within each group, levels ascend by the rating.
 
-## Прогресс и сохранение
+## Progress and saving
 
-Всё в `localStorage` под ключом `water-sort.save.v2` (из `v1` переносятся открытые уровни и настройки):
-звёзды за уровни (3 — в par, 2 — до par + 3, 1 — пройдено), текущая доска любого режима с историей,
-подсказки (3 в день, +1 за первые три звезды на уровне, максимум 9), результаты ежедневных досок и серия,
-результаты недель, серия и рекорд бесконечного режима, достижения и статистика.
+Everything lives in `localStorage` under the key `water-sort.save.v2` (unlocked levels and settings migrate
+from `v1`): stars per level (3 at par, 2 up to par + 3, 1 for finishing), the current board of any mode with
+its history, hints (3 a day, +1 for the first three-star finish of a level, at most 9), daily results and
+streak, weekly results, endless streak and best, achievements and statistics.
 
-## Веб-версия и установка на телефон
+## Web version and installing on a phone
 
-Сборка в `dist/` — это PWA: манифест, иконки, локальные шрифты и service worker, игра открывается без сети.
-Публикация на GitHub Pages автоматическая: workflow `.github/workflows/pages.yml` при каждом push в `main`
-запускает тесты, собирает и выкладывает `dist/`. Адрес: `https://<логин>.github.io/<репозиторий>/`.
+The `dist/` build is a PWA: manifest, icons, bundled fonts and a service worker, so the game opens without
+a network. Publishing to GitHub Pages is automatic: `.github/workflows/pages.yml` runs the tests, builds and
+deploys `dist/` on every push to `main`. The address is `https://<user>.github.io/<repository>/`.
 
-На iPhone: открыть адрес в Safari → Поделиться → «На экран „Домой“». На Android Chrome сам предложит установку.
+On an iPhone: open the address in Safari → Share → "Add to Home Screen". On Android, Chrome offers to
+install on its own.
 
-## Сборка для сторов
+## Store builds
 
-1. В `capacitor.config.ts` заменить `appId` на свой (после публикации его не изменить).
+1. Replace `appId` in `capacitor.config.ts` with your own (it cannot change after the first release).
 2. `npm run build`
-3. `npx cap add ios` и/или `npx cap add android` (один раз), дальше `npm run cap:sync`.
-4. `npx cap open ios` (нужен Mac с Xcode) или `npx cap open android` (Android Studio).
+3. `npx cap add ios` and/or `npx cap add android` (once), then `npm run cap:sync`.
+4. `npx cap open ios` (needs a Mac with Xcode) or `npx cap open android` (Android Studio).
 
-Перед релизом осталось: splash-экраны и иконки нативных проектов (PWA-иконки лежат в `public/icons`),
-при желании перевести сохранение с `localStorage` на `@capacitor/preferences`.
+Still to do before a release: splash screens and icons for the native projects (the PWA icons are in
+`public/icons`), and optionally saving through `@capacitor/preferences` instead of `localStorage`.
