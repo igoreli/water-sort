@@ -50,7 +50,7 @@ if (local) {
     'dist-single/local.html',
     `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
-<style>:root{box-sizing:border-box;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}[hidden]{display:none!important}</style>
+<style>body{margin:0;font:14px system-ui}[hidden]{display:none!important}</style>
 </head><body>${page}</body></html>`,
   );
 } else writeFileSync('dist-single/water-sort.html', page);

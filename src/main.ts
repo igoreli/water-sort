@@ -400,7 +400,7 @@ async function start(restored: Partial<Save> = {}) {
     $('win-stats').textContent = line;
     $('btn-next').textContent = next;
     $('win').hidden = false;
-    $('btn-next').focus();
+    $('btn-next').focus({ preventScroll: true });
     if (earned.length) {
       sfx.achievement();
       const names = earned.map((id) => ACHIEVEMENTS.find((a) => a.id === id)?.name ?? id);
