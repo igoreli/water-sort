@@ -1,0 +1,58 @@
+<div id="app" data-chapter="1">
+  <div id="stage" aria-hidden="true"></div>
+
+  <header class="hud" id="hud">
+    <button class="round" id="btn-levels" aria-label="Menu and levels">
+      <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg>
+    </button>
+    <div class="hud-title">
+      <h1 id="lvl-title">Level 1</h1>
+      <p class="hud-sub"><span id="lvl-chapter">Spring Water</span><span class="badge" id="lvl-hard" hidden>Hard</span><span id="lvl-mods"></span><span id="lvl-moves">0 pours</span></p>
+    </div>
+    <button class="round" id="btn-sound" aria-label="Sound" aria-pressed="true">
+      <svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path class="wave" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/><path class="mute" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+    </button>
+  </header>
+
+  <p class="coach" id="coach" hidden>Tap a bottle, then tap another to pour.</p>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <footer class="dock" id="dock">
+    <button id="btn-undo"><svg viewBox="0 0 24 24"><path d="M9 5.5L4.5 10 9 14.5"/><path d="M5 10h8.5a5 5 0 0 1 0 10H11"/></svg><span>Undo</span></button>
+    <button id="btn-restart"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.4-5.5"/><path d="M19.8 3.8v4.4h-4.4"/></svg><span>Restart</span></button>
+    <button id="btn-hint"><svg viewBox="0 0 24 24"><path d="M9 17.5h6M10 20.5h4"/><path d="M12 3.5a6 6 0 0 0-3.6 10.8c.5.4.8 1 .8 1.7h5.6c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3.5z"/></svg><span>Hint <b class="count" id="hint-count">3</b></span></button>
+  </footer>
+
+  <section class="win" id="win" hidden>
+    <p class="kicker" id="win-level">Level 1</p>
+    <h2 id="win-title">Sorted!</h2>
+    <p class="stars" id="win-stars" aria-label="Stars"></p>
+    <p id="win-stats">3 pours</p>
+    <div class="win-actions">
+      <button class="cta" id="btn-next">Next level</button>
+      <button class="ghost" id="btn-menu">Menu</button>
+    </div>
+  </section>
+
+  <section class="levels" id="levels" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+    <header>
+      <h2>Water Sort</h2>
+      <button class="round" id="btn-close-levels" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="menu-scroll">
+      <div class="modes">
+        <button class="mode" id="btn-daily"><span class="mode-name">Daily</span><span class="mode-sub" id="daily-sub">Today's board</span></button>
+        <button class="mode" id="btn-weekly"><span class="mode-name">Weekly</span><span class="mode-sub" id="weekly-sub">One twist, seven days</span></button>
+        <button class="mode" id="btn-endless"><span class="mode-name">Endless</span><span class="mode-sub" id="endless-sub">How far can you go?</span></button>
+      </div>
+      <h3 class="menu-h">Chapters</h3>
+      <div id="level-grid"></div>
+      <h3 class="menu-h">Achievements <span class="muted" id="ach-count"></span></h3>
+      <ul class="achievements" id="achievements"></ul>
+      <div class="levels-foot">
+        <span class="key">Hard: fewer spare bottles</span>
+        <label for="chk-unlock"><input type="checkbox" id="chk-unlock"> Open every level</label>
+      </div>
+    </div>
+  </section>
+</div>

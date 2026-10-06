@@ -1,0 +1,16 @@
+{
+  "name": "Water Sort Puzzle",
+  "short_name": "Water Sort",
+  "description": "Pour coloured water between bottles until every bottle holds one colour. 100 levels, daily and endless boards.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#130b3a",
+  "theme_color": "#130b3a",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
