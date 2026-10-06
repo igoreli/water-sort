@@ -68,7 +68,7 @@ Status: playable web build with all mechanics, modes and progression; tested. Na
 - After any change to rules, solver or generator: run `npm run levels`, then `npm test`.
 - Regenerating levels changes every board. Once the game is in a store, level content must not change for existing players; treat `levels.json` as frozen from then on and only append.
 - Keep `import 'pixi.js/unsafe-eval'` at the top of `src/main.ts`. Without it PixiJS breaks under a strict Content-Security-Policy.
-- The web build is a PWA: `index.html` carries the iOS home-screen meta tags and the manifest; fonts live in `public/fonts` (Google Fonts, OFL), nothing is fetched from a CDN. Cache matching in `sw.js` ignores `Vary`, otherwise assets served with `Vary: Origin` or `Vary: Accept-Encoding` miss the cache offline.
+- The web build is a PWA: `index.html` carries the iOS home-screen meta tags and the manifest. Keep the status bar style `default`: with `black-translucent` iOS sizes the home-screen web view short by the status bar height and a dead strip appears under the dock. iOS reads these metas when the icon is added, so a change needs the icon re-added; fonts live in `public/fonts` (Google Fonts, OFL), nothing is fetched from a CDN. Cache matching in `sw.js` ignores `Vary`, otherwise assets served with `Vary: Origin` or `Vary: Accept-Encoding` miss the cache offline.
 - `src/main.ts` must not import CSS (the single-file build bundles it with esbuild). CSS is imported in `src/entry.ts`.
 - Overlays are shown and hidden with the `hidden` attribute. `style.css` has `[hidden] { display: none !important }`; removing it makes the level list cover the game.
 - All text lives in the DOM, not on the canvas.
