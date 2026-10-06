@@ -82,11 +82,24 @@ async function start(restored: Partial<Save> = {}) {
 
   function applyTheme(ch: Chapter) {
     app.dataset.chapter = String(ch.id);
-    app.style.setProperty('--night', ch.theme.night);
-    app.style.setProperty('--dusk', ch.theme.dusk);
-    app.style.setProperty('--violet', ch.theme.violet);
-    app.style.setProperty('--violet-deep', ch.theme.deep);
+    // On the root, so the body behind #app takes the same colour (iOS can leave a strip of it visible).
+    const root = document.documentElement.style;
+    root.setProperty('--night', ch.theme.night);
+    root.setProperty('--dusk', ch.theme.dusk);
+    root.setProperty('--violet', ch.theme.violet);
+    root.setProperty('--violet-deep', ch.theme.deep);
     sfx.setLiquid(ch.theme.liquid);
+  }
+
+  /**
+   * iOS home-screen apps: the fixed-position viewport can come out shorter than
+   * the screen by the status bar height, leaving a strip under the dock. The app
+   * covers the whole screen there, so size it from the screen instead.
+   */
+  function fitStandalone() {
+    if (!(navigator as any).standalone) return;
+    const portrait = window.innerWidth <= window.innerHeight;
+    app.style.height = portrait ? `${Math.max(window.innerHeight, screen.height)}px` : '';
   }
 
   function badges(host: HTMLElement, mods: string[]) {
@@ -533,8 +546,11 @@ async function start(restored: Partial<Save> = {}) {
     board.resize({ top: $('hud').getBoundingClientRect().bottom - rect.top + 8, bottom: rect.bottom - $('dock').getBoundingClientRect().top + 8 });
   };
   new ResizeObserver(fit).observe(app);
+  window.addEventListener('resize', fitStandalone);
+  window.addEventListener('orientationchange', () => setTimeout(fitStandalone, 50));
 
   sfx.setEnabled(save.sound);
+  fitStandalone();
   fit();
 
   // ----- resume --------------------------------------------------------------
