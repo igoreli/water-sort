@@ -1,7 +1,7 @@
 {
   "name": "Water Sort Puzzle",
   "short_name": "Water Sort",
-  "description": "Pour coloured water between bottles until every bottle holds one colour. 100 levels, daily and endless boards.",
+  "description": "Pour coloured water between bottles until every bottle holds one colour. 500 levels, daily and endless boards.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

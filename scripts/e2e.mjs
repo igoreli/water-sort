@@ -63,6 +63,8 @@ console.log('after reload level', await page.evaluate(() => window.__waterSort.l
 await page.click('#btn-levels'); await page.waitForTimeout(300);
 await page.screenshot({ path: `${shots}/phone-levels.png` });
 await page.click('#chk-unlock'); await page.waitForTimeout(200);
+// chapters start folded except the one being played: unfold chapter 10 to reach level 100
+await page.click('#level-grid .chapter:nth-child(10) .chapter-head'); await page.waitForTimeout(200);
 await page.click('#level-grid button[data-id="100"]'); await page.waitForTimeout(500);
 await page.screenshot({ path: `${shots}/phone-level100.png` });
 console.log('level 100 pours', await solveByHints(page, { at: 3, path: `${shots}/phone-hint.png`, pourAt: 5, pourPath: `${shots}/phone-pour.png` }));

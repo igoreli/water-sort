@@ -389,12 +389,40 @@ input:focus-visible {
 .chapter.locked {
   opacity: 0.6;
 }
-.chapter header {
+.chapter-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  padding: 0 4px 8px;
+  width: 100%;
+  padding: 2px 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.chapter-head::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  margin-left: 2px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  opacity: 0.6;
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+.chapter.open .chapter-head {
+  padding-bottom: 8px;
+}
+.chapter.open .chapter-head::after {
+  transform: rotate(45deg);
+}
+.chapter:not(.open) .chapter-grid {
+  display: none;
 }
 .chapter h4 {
   margin: 0;

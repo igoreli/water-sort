@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { newAchievements, starsFor } from '../src/core/achievements';
-import { CHAPTERS, chapterOf, MODIFIERS } from '../src/core/chapters';
+import { CHAPTERS, chapterOf, compatible, LEVELS_PER_CHAPTER, MAX_COLORS, MODIFIERS, TOTAL_CHAPTERS, TOTAL_LEVELS } from '../src/core/chapters';
 import { applyMove, CAPACITY, capacityOf, cloneState, isLocked, isSolved, isStuck, pourAmount, Rules, State, usefulMoves, WILD } from '../src/core/game';
 import { buildBoard, Level, makePuzzle, puzzleRules, rng } from '../src/core/generator';
 import { dailyPuzzle, dayKey, endlessPuzzle, previousDayKey, weekKey, weeklyPuzzle } from '../src/core/modes';
@@ -127,7 +127,7 @@ assert.ok(newAchievements({ ...base, stars: allStars }).includes('chapter-stars'
 
 // ----- shipped levels -------------------------------------------------------
 const LEVELS = levels as Level[];
-assert.equal(LEVELS.length, 100);
+assert.equal(LEVELS.length, TOTAL_LEVELS);
 let longest = 0;
 for (const [i, lv] of LEVELS.entries()) {
   assert.equal(lv.id, i + 1, 'ids are consecutive');
@@ -150,7 +150,8 @@ for (const [i, lv] of LEVELS.entries()) {
   assert.equal(layers, fullCaps, `level ${lv.id}: every full bottle is full`);
   const spares = lv.bottles.filter((b) => b.length === 0).length;
   assert.ok(spares === 1 || spares === 2, `level ${lv.id}: spare bottles`);
-  if (lv.hard && !lv.mods.includes('locks')) assert.equal(spares, 1, `level ${lv.id}: hard has one spare`);
+  const keepsSpares = lv.mods.includes('locks') || (lv.mods.includes('labels') && lv.mods.length > 1);
+  if (lv.hard && !keepsSpares) assert.equal(spares, 1, `level ${lv.id}: hard has one spare`);
   if (lv.moveLimit) assert.ok(lv.moveLimit >= lv.par, `level ${lv.id}: limit allows the solution`);
   assert.ok(!isSolved(lv.bottles, rules), `level ${lv.id}: starts unsolved`);
   const res = solve(lv.bottles, { weight: 1.3, maxExpanded: 150_000, rules });
@@ -162,5 +163,18 @@ for (const [i, lv] of LEVELS.entries()) {
   assert.equal(h.status, 'solved', `level ${lv.id}: hint search finds a way`);
   longest = Math.max(longest, res.moves.length);
 }
-assert.equal(CHAPTERS.length, 10);
-console.log('rules ok; 100 levels solved and replayed; longest solution', longest, 'moves');
+// ----- chapters --------------------------------------------------------------
+assert.equal(CHAPTERS.length, TOTAL_CHAPTERS);
+assert.equal(CHAPTERS[CHAPTERS.length - 1].to, TOTAL_LEVELS);
+for (const [i, ch] of CHAPTERS.entries()) {
+  assert.equal(ch.id, i + 1, 'chapter ids are consecutive');
+  assert.equal(ch.from, i * LEVELS_PER_CHAPTER + 1, `chapter ${ch.id}: starts after the previous one`);
+  assert.equal(ch.to, ch.from + LEVELS_PER_CHAPTER - 1, `chapter ${ch.id}: ten levels`);
+  if (ch.mods !== 'chaos') {
+    assert.ok(ch.mods.length <= 2, `chapter ${ch.id}: at most two twists`);
+    if (ch.mods.length === 2) assert.ok(compatible(ch.mods[0], ch.mods[1]), `chapter ${ch.id}: twists fit together`);
+  }
+  assert.ok(ch.colors[0] <= ch.colors[1] && ch.colors[1] <= MAX_COLORS, `chapter ${ch.id}: colour range`);
+}
+assert.equal(new Set(CHAPTERS.map((c) => c.name)).size, CHAPTERS.length, 'chapter names are unique');
+console.log(`rules ok; ${LEVELS.length} levels solved and replayed; longest solution`, longest, 'moves');

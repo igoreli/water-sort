@@ -1,6 +1,6 @@
 # Water Sort Puzzle
 
-TypeScript + PixiJS 8, packaged for the stores with Capacitor. 100 levels in 10 chapters, each with a
+TypeScript + PixiJS 8, packaged for the stores with Capacitor. 500 levels in 50 chapters, each with a
 verified solution, plus a daily board, a weekly challenge and an endless mode. The web build is an
 installable PWA that works offline.
 
@@ -13,8 +13,8 @@ Play: https://igoreli.github.io/water-sort/
 | `npm install` | install dependencies |
 | `npm run dev` | local dev server (Vite) |
 | `npm run build` | type-check, web build into `dist/`, then the service worker is written |
-| `npm test` | rule, mode and achievement tests, then solves and replays all 100 levels |
-| `npm run levels` | regenerate `src/core/levels.json` (about a minute) |
+| `npm test` | rule, mode and achievement tests, then solves and replays all 500 levels |
+| `npm run levels` | regenerate `src/core/levels.json` (a few minutes) |
 | `npm run build:single` | the whole game as one HTML file in `dist-single/` (PixiJS from a CDN) |
 | `npm run test:e2e` | plays levels and modes in a real browser by clicking (needs Chromium and a server on `dist-single`, port 4173) |
 
@@ -45,7 +45,12 @@ Play: https://igoreli.github.io/water-sort/
 | 9 Lava Rush | 81–90 | pour limit: par + 3 |
 | 10 Grand Mix | 91–100 | two random twists per level |
 
-Every fifth level from 15 is "Hard": one spare bottle (the locks chapter keeps two and adds a colour).
+Chapters 11–50 are derived from these in four rounds of ten (`ROUNDS` in `chapters.ts`). Each round is a plain
+chapter, six single twists, two fixed pairs of twists and a chaos finale. Colour counts stay in the range of
+the base chapters, so the difficulty levels off rather than climbing.
+
+Every fifth level from 15 is "Hard": one spare bottle. Boards with a lock, or a label next to a second twist,
+keep two spares and add a colour instead (at most 9).
 
 ## Difficulty
 

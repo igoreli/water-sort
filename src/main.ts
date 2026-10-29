@@ -435,10 +435,21 @@ async function start(restored: Partial<Save> = {}) {
 
     const grid = $('level-grid');
     grid.textContent = '';
+    // Fifty chapters do not fit on one screen: only the chapter being played (or the one
+    // at the frontier) starts unfolded; a tap on a header folds or unfolds it.
+    const focusId = play.mode === 'campaign' ? play.levelId : Math.min(maxOpen(), LEVELS.length);
     for (const ch of CHAPTERS) {
       const block = document.createElement('section');
-      block.className = 'chapter' + (ch.from > maxOpen() ? ' locked' : '');
-      const head = document.createElement('header');
+      const unfolded = ch.from <= focusId && focusId <= ch.to;
+      block.className = 'chapter' + (ch.from > maxOpen() ? ' locked' : '') + (unfolded ? ' open' : '');
+      const head = document.createElement('button');
+      head.type = 'button';
+      head.className = 'chapter-head';
+      head.setAttribute('aria-expanded', String(unfolded));
+      head.addEventListener('click', () => {
+        const now = block.classList.toggle('open');
+        head.setAttribute('aria-expanded', String(now));
+      });
       const h = document.createElement('h4');
       h.textContent = `${ch.id}. ${ch.name}`;
       const mods = document.createElement('span');

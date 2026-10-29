@@ -17,6 +17,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'daily-7', name: 'Week Streak', text: 'Solve the daily board 7 days in a row.' },
   { id: 'endless-10', name: 'Marathon', text: 'Reach a streak of 10 in Endless.' },
   { id: 'hundred', name: 'The Hundredth', text: 'Sort level 100.' },
+  { id: 'finale', name: 'Last Bottle', text: 'Sort level 500.' },
   { id: 'thousand', name: 'Thousand Pours', text: 'Make 1000 pours in total.' },
 ];
 
@@ -46,6 +47,7 @@ export function newAchievements(a: AchievementInput): string[] {
   earn('daily-7', a.dailyStreak >= 7);
   earn('endless-10', a.endlessBest >= 10);
   earn('hundred', (a.stars['100'] ?? 0) > 0);
+  earn('finale', (a.stars['500'] ?? 0) > 0);
   earn('thousand', a.stats.pours >= 1000);
   return out;
 }

@@ -1,7 +1,8 @@
 # Water Sort Puzzle
 
 A level-based colour-sorting puzzle: pour layers of coloured water between bottles until every
-bottle holds one colour. 100 levels in 10 chapters, each chapter adding one twist, plus daily, weekly
+bottle holds one colour. 500 levels in 50 chapters: ten hand-written chapters that each add one twist, then four
+derived rounds that rotate and pair the twists, plus daily, weekly
 and endless boards. Target platforms: web, iOS and Android from one codebase.
 
 Status: playable web build with all mechanics, modes and progression; tested. Native builds have never been made.
@@ -20,8 +21,8 @@ Status: playable web build with all mechanics, modes and progression; tested. Na
 | `npm install` | install dependencies |
 | `npm run dev` | Vite dev server |
 | `npm run build` | type-check, web build into `dist/`, then `scripts/pwa.mjs` writes the service worker |
-| `npm test` | rule, mode and achievement tests, then solves and replays all 100 levels |
-| `npm run levels` | regenerate `src/core/levels.json` (about a minute) |
+| `npm test` | rule, mode and achievement tests, then solves and replays all 500 levels |
+| `npm run levels` | regenerate `src/core/levels.json` (a few minutes) |
 | `npm run build:single` | whole game as one HTML fragment in `dist-single/` (PixiJS from CDN) |
 | `npm run test:e2e` | plays levels in a real browser by clicking; see "End-to-end test" below |
 | `npm run cap:sync` | web build + `cap sync` |
@@ -31,7 +32,8 @@ Status: playable web build with all mechanics, modes and progression; tested. Na
 - `src/core/game.ts` — rules: pour, win, stuck. Pure functions, no DOM, no Pixi. Every function takes a `Rules`
   object (capacity per bottle, labels, locks, whole-run pouring); `DEFAULT_RULES` is four layers and nothing else.
   `WILD` (-1) is a layer that matches any colour.
-- `src/core/chapters.ts` — the ten chapters: twist, colour range, theme (CSS colours, vessel, liquid), tutorial tip.
+- `src/core/chapters.ts` — the chapters: twist(s), colour range, theme (CSS colours, vessel, liquid), tutorial tip.
+  The first ten are written by hand; chapters 11–50 are derived from them in rounds (`ROUNDS`).
 - `src/core/solver.ts` — weighted A* over the rules. Verifies levels at build time and powers the Hint button at run time.
 - `src/core/generator.ts` — `buildBoard` applies modifiers, `rateBoard` rates difficulty, `makePuzzle` generates at run time.
 - `src/core/modes.ts` — daily, weekly and endless boards seeded from the calendar (`dayKey`, `weekKey`).
@@ -56,7 +58,11 @@ Status: playable web build with all mechanics, modes and progression; tested. Na
 - A labelled bottle accepts only its colour. A locked bottle cannot be touched until the colour on its padlock is complete somewhere.
 - Solved when every bottle is empty or full with one colour.
 - Fog (`hidden`) and the move limit (`moveLimit`) live outside the rules: the view hides layers the player has not seen, the controller ends the attempt when the limit is hit.
-- Levels: 1 is a fixed tutorial; 2–100 are generated per chapter (see `chapters.ts`). Every 5th level from 15 is "hard": one spare bottle instead of two (the locks chapter keeps two spares and adds a colour).
+- Levels: 1 is a fixed tutorial; 2–500 are generated per chapter (see `chapters.ts`). Levels 1–100 use their
+  own random stream in `gen-levels.ts`, so adding rounds after them does not change them.
+- Every 5th level from 15 is "hard": one spare bottle instead of two. Boards with a lock, or a label next to a
+  second twist, keep two spares and add a colour instead (at most 9).
+- Difficulty does not climb past the base chapters: derived chapters reuse their colour ranges.
 - Difficulty = solution length × (1 + 2 × share of no-lookahead playouts that get stuck). Within a group, levels ascend by it.
 - Stars: 3 at par or better, 2 within par + 3, 1 for finishing. Hints: 3 a day, +1 for the first three-star finish of a level, capped at 9.
 - Daily and weekly boards are seeded from the local date / ISO week, so all players share them without a server. Endless raises colours with the streak and mixes in twists from streak 4.
