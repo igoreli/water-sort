@@ -68,11 +68,17 @@ export const defaults = (): Save => ({
 /** Fills in anything a stored save is missing, so older shapes keep working. */
 function complete(raw: Partial<Save>): Save {
   const d = defaults();
+  const best = { ...d.best, ...raw.best };
+  // A save made when the campaign was shorter stops at its old last level, so the frontier
+  // is wherever the solved levels end, if that is further.
+  let frontier = 1;
+  while (best[frontier] !== undefined) frontier++;
   return {
     ...d,
     ...raw,
     v: 2,
-    best: { ...d.best, ...raw.best },
+    unlocked: Math.max(raw.unlocked ?? d.unlocked, frontier),
+    best,
     hints: { ...d.hints, ...raw.hints },
     stats: { ...d.stats, ...raw.stats },
     daily: { ...d.daily, ...raw.daily, results: { ...raw.daily?.results } },
